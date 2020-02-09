@@ -13,7 +13,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "9.1.1"
 }
 
-val repoRef = "SimpleMC\\/SimpleHealthbars2"
+val repoRef = "SimpleMC\\/mc-kotlin-plugin-template"
 val mcApiVersion = "1.15"
 
 group = "org.simplemc"

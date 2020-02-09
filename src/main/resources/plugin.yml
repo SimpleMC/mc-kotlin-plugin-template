@@ -2,5 +2,5 @@ name: KotlinPluginTemplate
 main: org.simplemc.plugintemplate.KotlinPluginTemplate
 version: 0.1.0
 api-version: "1.15"
-website: https://github.com/SimpleMC/KotlinPluginTemplate
+website: https://github.com/SimpleMC/mc-kotlin-plugin-template
 author: tajobe
