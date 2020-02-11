@@ -116,9 +116,11 @@ tasks {
     register<ShadowJar>("nokt") {
         minimize()
         archiveClassifier.set("nokt")
+        from(sourceSets.main.get().output)
+        configurations = listOf(project.configurations.runtimeClasspath.get())
 
         dependencies {
-            exclude("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+            exclude(dependency("org.jetbrains.*:"))
         }
     }
 
