@@ -7,5 +7,6 @@ Opinionated template/starter for creating Minecraft plugins in Kotlin using the 
   - automatic updating of `CHANGELOG.md` and `main/resources/plugin.yml` when a release is made
 - Github Actions to build PRs and automatically create Github releases when a release tag is pushed
 - [`ktlint`](https://github.com/JLLeitschuh/ktlint-gradle) Gradle plugin
-- Gradle build generates a shadowed jar which includes kotlin stdlib and a `nokt` jar without
-  - Users with the stdlib already on the classpath can use the smaller jar
+- Gradle build generates a standard plugin jar which will download dependencies declared as
+[`libraries`](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/plugin/PluginDescriptionFile.html#getLibraries()) in
+`plugin.yml` and an "offline"/shadowed jar containing necessary dependencies
