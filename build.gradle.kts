@@ -39,7 +39,7 @@ scmVersion {
                 mapOf(
                     "file" to "CHANGELOG.md",
                     "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ ->
-                        "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/\\N*\$([\\s\\S]*))?\\z"
+                        "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/[^\\n]*\$([\\s\\S]*))?\\z"
                     }),
                     "replacement" to KotlinClosure2<String, HookContext, String>({ v, c ->
                         """
