@@ -93,6 +93,7 @@ tasks {
             expand(placeholders)
         }
 
+        // create an "offline" copy/variant of the plugin.yml with `libraries` omitted
         doLast {
             val resourcesDir = sourceSets.main.get().output.resourcesDir
             val yamlDumpOptions =
