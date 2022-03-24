@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     tags:
-      - 'release-*'
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   release:
@@ -18,19 +18,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build
-      - name: Extract version
-        uses: frabert/replace-string-action@v2.0
-        id: format-version
-        with:
-          pattern: 'refs/tags/release-([0-9]+.[0-9]+.[0-9]+)'
-          string: ${{ github.ref }}
-          replace-with: '$1'
       - name: Release
         uses: docker://antonyurchenko/git-release:v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DRAFT_RELEASE: "true"
-          TAG_PREFIX_REGEX: "release-"
         with:
           args: |
             build/libs/*.jar

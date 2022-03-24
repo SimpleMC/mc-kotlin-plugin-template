@@ -46,8 +46,8 @@ scmVersion {
                             \[Unreleased\]
                             
                             ## \[$v\] - ${currentDateString()}$1
-                            \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/release-$v...HEAD
-                            \[$v\]: https:\/\/github\.com\/$repoRef\/compare\/release-${c.previousVersion}...release-$v$2
+                            \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/v$v...HEAD
+                            \[$v\]: https:\/\/github\.com\/$repoRef\/compare\/v${c.previousVersion}...v$v$2
                         """.trimIndent()
                     })
                 )
