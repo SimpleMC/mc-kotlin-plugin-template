@@ -47,7 +47,7 @@ scmVersion {
                             
                             ## \[$v\] - ${currentDateString()}$1
                             \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/v$v...HEAD
-                            \[$v\]: https:\/\/github\.com\/$repoRef\/compare\/v${c.previousVersion}...v$v$2
+                            \[$v\]: https:\/\/github\.com\/$repoRef\/${if (c.previousVersion == v) "releases/tag/v$v" else "compare/v${c.previousVersion}...v$v"}${'$'}2
                         """.trimIndent()
                     })
                 )
