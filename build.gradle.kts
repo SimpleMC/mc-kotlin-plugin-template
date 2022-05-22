@@ -19,8 +19,8 @@ buildscript {
 plugins {
     kotlin("jvm")
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("pl.allegro.tech.build.axion-release") version "1.13.6"
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    id("pl.allegro.tech.build.axion-release") version "1.13.7"
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 group = "org.simplemc"
