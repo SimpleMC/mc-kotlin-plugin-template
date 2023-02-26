@@ -9,24 +9,23 @@ on:
 jobs:
   build:
     name: Gradle Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-java@v2
         with:
-          java-version: 17
-          distribution: temurin
+          fetch-depth: 0
       - uses: gradle/gradle-build-action@v2
       - name: Gradle Build
         run: ./gradlew build
       - name: Get Version
         id: version
-        run: echo ::set-output name=version::"$(./gradlew --console plain --quiet currentVersion -Prelease.quiet)"
+        run: echo "version=$(./gradlew --console plain --quiet currentVersion -Prelease.quiet)" >> $GITHUB_OUTPUT
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
           name: build
           path: build/libs/*.jar
           retention-days: 7
+          if-no-files-found: error

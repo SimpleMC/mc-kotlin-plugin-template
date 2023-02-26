@@ -1,32 +1,38 @@
-name: Release
+name: Create Release
+
 on:
-  push:
-    branches: ['master', 'main'] # TODO: master/main
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+    inputs:
+      versionIncrementer:
+        type: choice
+        description: Override the default version incrementer according to https://axion-release-plugin.readthedocs.io/en/latest/configuration/version/#incrementing
+        default: default
+        options:
+          - default
+          - incrementPatch
+          - incrementMinor
+          - incrementMajor
+          - incrementPrerelease
 
 jobs:
-  build:
-    uses: ./.github/workflows/build-workflow.yml
   release:
-    needs: build
-    name: Create Release
-    runs-on: ubuntu-latest
+    name: Gradle Release
+    runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v3
-      - name: Download build
-        uses: actions/download-artifact@v3
         with:
-          name: build
-          path: build
-      - name: Release
-        uses: docker://antonyurchenko/git-release:v4
+          token: "${{ secrets.PAT }}"
+          fetch-depth: 0
+      - uses: gradle/gradle-build-action@v2
+      - name: Gradle Release
+        if: ${{ inputs.versionIncrementer == 'default' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_NAME: ${{ needs.build.outputs.version }}
-          PRE_RELEASE: ${{ github.ref_type == 'branch' }}
-          UNRELEASED: ${{ github.ref_type == 'branch' && 'update' || '' }}
-          UNRELEASED_TAG: latest-snapshot
-        with:
-          args: |
-            build/*.jar
+          DEPLOY_KEY: ${{ secrets.COMMIT_KEY }}
+        run: ./gradlew release
+      - name: Gradle Release w/ Increment Override
+        if: ${{ inputs.versionIncrementer != 'default' }}
+        env:
+          DEPLOY_KEY: ${{ secrets.COMMIT_KEY }}
+        run: ./gradlew release -Prelease.versionIncrementer=${{ inputs.versionIncrementer }}
