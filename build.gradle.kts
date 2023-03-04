@@ -2,7 +2,6 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocatio
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
-import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -12,15 +11,15 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.yaml:snakeyaml:1.30")
+        classpath("org.yaml:snakeyaml:2.0")
     }
 }
 
 plugins {
     kotlin("jvm")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("pl.allegro.tech.build.axion-release") version "1.13.7"
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("com.github.johnrengelman.shadow") version "8.0.0"
+    id("pl.allegro.tech.build.axion-release") version "1.14.4"
+    id("org.jlleitschuh.gradle.ktlint") version "11.2.0"
 }
 
 group = "org.simplemc"
@@ -32,29 +31,29 @@ val repoRef: String by project
 scmVersion {
     versionIncrementer("incrementMinorIfNotOnRelease", mapOf("releaseBranchPattern" to "release/.+"))
 
-    hooks(
-        closureOf<HooksConfig> {
-            pre(
-                "fileUpdate",
-                mapOf(
-                    "file" to "CHANGELOG.md",
-                    "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ ->
-                        "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/[^\\n]*\$([\\s\\S]*))?\\z"
-                    }),
-                    "replacement" to KotlinClosure2<String, HookContext, String>({ v, c ->
-                        """
-                            \[Unreleased\]
-                            
-                            ## \[$v\] - ${currentDateString()}$1
-                            \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/v$v...HEAD
-                            \[$v\]: https:\/\/github\.com\/$repoRef\/${if (c.previousVersion == v) "releases/tag/v$v" else "compare/v${c.previousVersion}...v$v"}${'$'}2
-                        """.trimIndent()
-                    })
-                )
+    hooks {
+        // FIXME - workaround for Kotlin DSL issue https://github.com/allegro/axion-release-plugin/issues/500
+        pre(
+            "fileUpdate",
+            mapOf(
+                "file" to "CHANGELOG.md",
+                "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ ->
+                    "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/[^\\n]*\$([\\s\\S]*))?\\z"
+                }),
+                "replacement" to KotlinClosure2<String, HookContext, String>({ v, c ->
+                    """
+                        \[Unreleased\]
+
+                        ## \[$v\] - ${currentDateString()}$1
+                        \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/v$v...HEAD
+                        \[$v\]: https:\/\/github\.com\/$repoRef\/${if (c.previousVersion == v) "releases/tag/v$v" else "compare/v${c.previousVersion}...v$v"}${'$'}2
+                    """.trimIndent()
+                })
             )
-            pre("commit")
-        }
-    )
+        )
+
+        pre("commit")
+    }
 }
 
 fun currentDateString() = OffsetDateTime.now(ZoneOffset.UTC).toLocalDate().format(DateTimeFormatter.ISO_DATE)
@@ -78,7 +77,7 @@ dependencies {
 
 tasks {
     wrapper {
-        gradleVersion = "7.4.1"
+        gradleVersion = "8.0.1"
         distributionType = Wrapper.DistributionType.ALL
     }
 
@@ -99,8 +98,8 @@ tasks {
             val yamlDumpOptions =
                 // make it pretty for the people
                 DumperOptions().also {
-                    it.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)
-                    it.setPrettyFlow(true)
+                    it.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+                    it.isPrettyFlow = true
                 }
             val yaml = Yaml(yamlDumpOptions)
             val pluginYml: Map<String, Any> = yaml.load(file("$resourcesDir/plugin.yml").inputStream())
@@ -123,7 +122,7 @@ tasks {
     // avoid classpath conflicts/pollution via relocation
     val configureShadowRelocation by registering(ConfigureShadowRelocation::class) {
         target = shadowJar.get()
-        prefix = "${project.group}.${project.name.toLowerCase()}.libraries"
+        prefix = "${project.group}.${project.name.lowercase()}.libraries"
     }
 
     build {
