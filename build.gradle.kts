@@ -1,10 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
-import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+// import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
 
 buildscript {
     repositories {
@@ -33,24 +33,24 @@ scmVersion {
 
     hooks {
         // FIXME - workaround for Kotlin DSL issue https://github.com/allegro/axion-release-plugin/issues/500
-        pre(
-            "fileUpdate",
-            mapOf(
-                "file" to "CHANGELOG.md",
-                "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ ->
-                    "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/[^\\n]*\$([\\s\\S]*))?\\z"
-                }),
-                "replacement" to KotlinClosure2<String, HookContext, String>({ v, c ->
-                    """
-                        \[Unreleased\]
-
-                        ## \[$v\] - ${currentDateString()}$1
-                        \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/v$v...HEAD
-                        \[$v\]: https:\/\/github\.com\/$repoRef\/${if (c.previousVersion == v) "releases/tag/v$v" else "compare/v${c.previousVersion}...v$v"}${'$'}2
-                    """.trimIndent()
-                })
-            )
-        )
+//        pre(
+//            "fileUpdate",
+//            mapOf(
+//                "file" to "CHANGELOG.md",
+//                "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ ->
+//                    "\\[Unreleased\\]([\\s\\S]+?)\\n(?:^\\[Unreleased\\]: https:\\/\\/github\\.com\\/$repoRef\\/compare\\/[^\\n]*\$([\\s\\S]*))?\\z"
+//                }),
+//                "replacement" to KotlinClosure2<String, HookContext, String>({ v, c ->
+//                    """
+//                        \[Unreleased\]
+//
+//                        ## \[$v\] - ${currentDateString()}$1
+//                        \[Unreleased\]: https:\/\/github\.com\/$repoRef\/compare\/v$v...HEAD
+//                        \[$v\]: https:\/\/github\.com\/$repoRef\/${if (c.previousVersion == v) "releases/tag/v$v" else "compare/v${c.previousVersion}...v$v"}${'$'}2
+//                    """.trimIndent()
+//                })
+//            )
+//        )
 
         pre("commit")
     }
