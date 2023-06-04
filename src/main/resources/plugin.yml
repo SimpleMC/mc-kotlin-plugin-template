@@ -1,8 +1,10 @@
-name: KotlinPluginTemplate
-main: org.simplemc.plugintemplate.KotlinPluginTemplate
+name: QuestKit
+main: io.github.xanderstuff.questkit.QuestKitPlugin
 version: "${version}"
 api-version: "${apiVersion}"
-website: https://github.com/SimpleMC/mc-kotlin-plugin-template
-author: tajobe
+website: https://github.com/xanderstuff/QuestKit
+authors:
+  - xanderstuff
+  - 0TickPulse
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}

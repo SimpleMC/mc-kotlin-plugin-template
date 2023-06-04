@@ -1,11 +1,8 @@
-package org.simplemc.plugintemplate
+package io.github.xanderstuff.questkit
 
 import org.bukkit.plugin.java.JavaPlugin
 
-/**
- * KotlinPluginTemplate plugin
- */
-class KotlinPluginTemplate : JavaPlugin() {
+class QuestKitPlugin : JavaPlugin() {
 
     override fun onEnable() {
         // ensure config file exists

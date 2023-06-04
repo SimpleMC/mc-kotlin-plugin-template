@@ -6,4 +6,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "mc-kotlin-plugin-template"
+rootProject.name = "QuestKit"
