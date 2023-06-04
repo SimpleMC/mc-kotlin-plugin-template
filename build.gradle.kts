@@ -68,11 +68,14 @@ repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://mvn.lumine.io/repository/maven-public/")
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    compileOnly(group = "org.spigotmc", name = "spigot-api", version = "$mcApiVersion+")
+    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
+    compileOnly("io.lumine:Mythic-Dist:5.3.5-SNAPSHOT")
 }
 
 tasks {
