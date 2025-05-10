@@ -1,4 +1,4 @@
-name: Create Release
+name: Create Version
 
 on:
   workflow_dispatch:
@@ -17,22 +17,26 @@ on:
 jobs:
   release:
     name: Gradle Release
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          token: "${{ secrets.PAT }}"
+          ssh-key: "${{ secrets.COMMIT_KEY }}"
           fetch-depth: 0
-      - uses: gradle/gradle-build-action@v2
+      - uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.COMMIT_KEY }}
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
       - name: Gradle Release
         if: ${{ inputs.versionIncrementer == 'default' }}
-        env:
-          DEPLOY_KEY: ${{ secrets.COMMIT_KEY }}
         run: ./gradlew release
       - name: Gradle Release w/ Increment Override
         if: ${{ inputs.versionIncrementer != 'default' }}
-        env:
-          DEPLOY_KEY: ${{ secrets.COMMIT_KEY }}
         run: ./gradlew release -Prelease.versionIncrementer=${{ inputs.versionIncrementer }}

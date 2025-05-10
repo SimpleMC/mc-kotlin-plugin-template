@@ -1,0 +1,16 @@
+[versions]
+axionRelease = "1.18.18"
+kotlin = "2.1.20"
+ktlintGradle = "12.2.0"
+mcApi = "1.21"
+shadow = "8.3.6"
+spigot = "1.21.+"
+
+[plugins]
+axionRelease = { id = "pl.allegro.tech.build.axion-release", version.ref = "axionRelease"}
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin"}
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle"}
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow"}
+
+[libraries]
+spigot = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigot" }
