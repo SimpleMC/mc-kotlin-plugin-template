@@ -9,21 +9,27 @@ on:
 jobs:
   build:
     name: Gradle Build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: gradle/gradle-build-action@v2
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
       - name: Gradle Build
-        run: ./gradlew build
+        run: ./gradlew build shadowJar
       - name: Get Version
         id: version
         run: echo "version=$(./gradlew --console plain --quiet currentVersion -Prelease.quiet)" >> $GITHUB_OUTPUT
       - name: Upload build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: build/libs/*.jar

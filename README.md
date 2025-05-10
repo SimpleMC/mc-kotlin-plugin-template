@@ -6,8 +6,8 @@ Opinionated template/starter for creating Minecraft plugins in Kotlin using the 
 - Gradle axion-release-plugin for managing semver
     - automatic updating of `CHANGELOG.md` and `main/resources/plugin.yml` when a release is made
 - Github Actions to build PRs and automatically create Github releases when a release tag is pushed
-    - Manual Create Release pipeline to increment semver tag and trigger publishing a new version
-      - Requires a secret named `PAT` with a GitHub PAT with code read/write permission to the repository
+    - Manual Create Version pipeline to increment semver tag and trigger publishing a new version
+      - Requires a configured deploy key with write permission to the repository (see usage below)
 - [`ktlint`](https://github.com/JLLeitschuh/ktlint-gradle) Gradle plugin
 - Gradle build generates a standard plugin jar which will download dependencies declared as
 [`libraries`](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/plugin/PluginDescriptionFile.html#getLibraries()) in
@@ -24,14 +24,14 @@ Opinionated template/starter for creating Minecraft plugins in Kotlin using the 
     - `src/main/resources/plugin.yml` -> set `name`, `main`, `website`, `author`
     - `src/main/kotlin/org/simplemc/plugintemplate/KotlinPluginTemplate.kt` -> Move packages/rename for your plugin
     - `README.md` -> Update
-3. To use the Create Release automation, add PAT secret
-    1. Create a Personal Access Token: https://github.com/settings/personal-access-tokens/new
-        - Repository Access: "Only select repositories" and pick the plugin template fork
-        - Repository Permissions: Contents Read & write
-            - This is so the automation can create release commits
-    2. Add the PAT as an Actions secret to your new repository: `https://github.com/<repo slug>/settings/secrets/actions/new`
-        - Name: `PAT`
-        - Secret Contents: Paste the Personal Access Token you created in the previous step
+3. To use the Create Version automation, add an SSH key
+    1. Create an SSH key-pair (no password): `ssh-keygen -t ed25519 -C "your_email@example.com" -f ~/.ssh/<name_your_key>deploy`
+    2. Add the Public Key as a Deploy Key (**Important! Enable `Allow write access`**): https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#set-up-deploy-keys an Actions secret to your new repository: `https://github.com/<repo slug>/settings/secrets/actions/new`
+    3. Add the Private Key as an Actions secret: `https://github.com/<repo slug>/settings/secrets/actions/new`
+        - Name: `COMMIT_KEY`
+        - Secret Contents: Paste the Private key
+    4. The GitHub Actions are configured to use this key to publish tags and release commits (see `.github/workflows/create-version.yml`)
+        - See [axion-release-plugin Authorization](https://axion-release-plugin.readthedocs.io/en/latest/configuration/authorization/) for alternative Auth options
 
 ## Examples
 
