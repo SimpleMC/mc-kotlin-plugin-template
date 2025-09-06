@@ -65,6 +65,7 @@ dependencies {
 
 tasks {
     wrapper {
+        gradleVersion = "9.0.0"
         distributionType = Wrapper.DistributionType.ALL
     }
 
@@ -106,7 +107,7 @@ tasks {
         rename("offline-plugin.yml", "plugin.yml")
 
         // avoid classpath conflicts/pollution via relocation
-        isEnableRelocation = true
+        enableAutoRelocation = true
         relocationPrefix = "${project.group}.${project.name.lowercase()}.libraries"
     }
 }

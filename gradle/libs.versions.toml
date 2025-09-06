@@ -1,9 +1,9 @@
 [versions]
-axionRelease = "1.18.18"
-kotlin = "2.1.20"
-ktlintGradle = "12.2.0"
+axionRelease = "1.20.1"
+kotlin = "2.2.10"
+ktlintGradle = "13.1.0"
 mcApi = "1.21"
-shadow = "8.3.6"
+shadow = "9.1.0"
 spigot = "1.21.+"
 
 [plugins]
